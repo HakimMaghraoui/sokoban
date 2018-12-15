@@ -3,20 +3,24 @@ package sample;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 public class VueIHMFX {
 
     CommandeTabInt commandeGetEtat;
     CommandeDirection commandeGetDirection;
-    Canvas canvas = new Canvas(500,350);
+    Canvas canvas = new Canvas(400,200);
     //通过画布获取画笔
+
     GraphicsContext g2d = canvas.getGraphicsContext2D();
 
+    public VueIHMFX(Controleur controleur) throws FileNotFoundException {
+        commandeGetEtat = controleur.commandeGetEtat();
+        commandeGetDirection=controleur.commandeGetDirection();
+        dessine();
+    }
 
     public void afficheWin(){
         Alert _alert = new Alert(Alert.AlertType.INFORMATION);
@@ -25,16 +29,22 @@ public class VueIHMFX {
         _alert.show();
     }
 
-    public VueIHMFX(Controleur controleur) throws FileNotFoundException {
-        commandeGetEtat = controleur.commandeGetEtat();
-        commandeGetDirection=controleur.commandeGetDirection();
-
-        dessine();
+    public void resetCanvas(){
+        String [][] map = commandeGetEtat.exec();
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                Image way1 =new Image(getClass().getResource("/Sokoban_pack/PNG/White.png").toString());
+                g2d.drawImage(way1,j*50,i*50,50,50);
+            }
+        }
     }
 
     public void dessine() {
-
         String [][] map = commandeGetEtat.exec();
+        int width=map[0].length*50,height=map.length*50;
+        canvas.setHeight(height);
+        canvas.setWidth(width);
+
         String direction=commandeGetDirection.exec();
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
@@ -45,6 +55,7 @@ public class VueIHMFX {
                  * double w  画多宽/压缩画
                  * double h  画多高/压缩画
                  */
+                if (map[i][j]!=null)
                 switch (map[i][j]) {
                     case " ":
                         Image way1 =new Image(getClass().getResource("/Sokoban_pack/PNG/GroundGravel_Grass.png").toString());
@@ -79,6 +90,10 @@ public class VueIHMFX {
                     case "*":
                         Image fBox =new Image(getClass().getResource("/Sokoban_pack/PNG/Crate_Red.png").toString());
                         g2d.drawImage(fBox,j*50,i*50,50,50);
+                        break;
+                    case "0":
+                        Image vide =new Image(getClass().getResource("/Sokoban_pack/PNG/White.png").toString());
+                        g2d.drawImage(vide,j*50,i*50,50,50);
                         break;
                     default:
                         break;

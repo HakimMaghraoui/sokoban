@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
 
@@ -16,8 +17,12 @@ public class Controleur implements Sujet {
     FacadeModele facadeModele;
     ArrayList<Observateur> observateurs = new ArrayList<Observateur>();
 
+
+
     private Controleur(FacadeModele facadeModele) {
         this.facadeModele = facadeModele;
+        chargerNiveau(0);
+
     }
 
     public void abonne(Observateur observateur) {
@@ -30,20 +35,22 @@ public class Controleur implements Sujet {
             observateur.actualise();
     }
 
+    public void move(String m, boolean b) {
+        facadeModele.move(m,b);
+        notifie();
+    }
+
     public boolean win(){
         return facadeModele.win();
     }
 
     public void undo(){
         facadeModele.undo();
+        notifie();
     }
 
     public void redo(){
         facadeModele.redo();
-    }
-
-    public void move(String m, boolean b) {
-        facadeModele.move(m,b);
         notifie();
     }
 
@@ -51,6 +58,23 @@ public class Controleur implements Sujet {
         facadeModele.reset();
         notifie();
     }
+    void chargerNiveau(int i){
+        facadeModele.chargerNiveau(i);
+        notifie();
+
+    }
+
+    public void AddLevel(String absolutePath) {
+        ArrayList<String [][]>added=facadeModele.lireFichier(absolutePath);
+        for (String[][] level : added)
+            facadeModele.AddLevel(level);
+        notifie();
+
+    }
+
+
+
+
 
     public CommandeTabInt commandeGetEtat() {
         return new CommandeTabInt() {
@@ -67,6 +91,23 @@ public class Controleur implements Sujet {
             @Override
             public String exec() {
                 return facadeModele.getDirection();
+            }
+        };
+    }
+
+    public CommandeAuthors commandeAuthors() {
+        return new CommandeAuthors() {
+            @Override
+            public ArrayList<String> exec() {
+                return facadeModele.getNameAuthor();
+            }
+        };
+    }
+    public CommandeCurrentLevelInt commandeCurrentLevelInt() {
+        return new CommandeCurrentLevelInt() {
+            @Override
+            public int exec() {
+                return facadeModele.getCurrentLevel();
             }
         };
     }

@@ -1,27 +1,34 @@
 package sample;
 
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.canvas.*;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class MonteurScene {
-    //ArrayList<Region> bas = new ArrayList<Region>();
     AnchorPane root=new AnchorPane();
     EventHandler<Event>event;
-    int largeur = 800;
-    int hauteur = 400;
+
+    int largeur = 0;
+    int hauteur = 0;
 
 
     public MonteurScene setLargeur(int l){
@@ -39,21 +46,77 @@ public class MonteurScene {
         return this;
     }
 
-    public MonteurScene setCentre(Canvas node) {
+    public MonteurScene setCentre(Node node) {
         root.getChildren().add(node);
         return this;
     }
 
-    public MonteurScene ajoutRight(Region node) {
-        AnchorPane.setBottomAnchor(node,10.0);
-        AnchorPane.setRightAnchor(node,25.0);
-        root.getChildren().add(node);
+
+
+
+
+
+
+
+    public MonteurScene ajoutRight(Region reset,Region undo, Region redo, ComboBox comboBox, Button choose, Button openMultipleButton, Label nameAuthor,Button nexTL,Button preVL) {
+
+        reset.setFocusTraversable(false);
+        undo.setFocusTraversable(false);
+        redo.setFocusTraversable(false);
+        comboBox.setFocusTraversable(false);
+        choose.setFocusTraversable(true);
+        openMultipleButton.setFocusTraversable(false);
+        AnchorPane.setBottomAnchor(reset,10.0);
+        AnchorPane.setRightAnchor(reset,25.0);
+        root.getChildren().add(reset);
+        AnchorPane.setBottomAnchor(undo,10.0);
+        AnchorPane.setRightAnchor(undo,85.0);
+        root.getChildren().add(undo);
+        AnchorPane.setBottomAnchor(redo,10.0);
+        AnchorPane.setRightAnchor(redo,145.0);
+        root.getChildren().add(redo);
+
+        AnchorPane.setBottomAnchor(comboBox,50.0);
+        AnchorPane.setRightAnchor(comboBox,320.0);
+        root.getChildren().add(comboBox);
+
+
+        AnchorPane.setBottomAnchor(choose,50.0);
+        AnchorPane.setRightAnchor(choose,250.0);
+        root.getChildren().add(choose);
+
+        AnchorPane.setBottomAnchor(openMultipleButton,20.0);
+        AnchorPane.setRightAnchor(openMultipleButton,320.0);
+        root.getChildren().add(openMultipleButton);
+
+        nameAuthor.setText("MICROCOSMOS 1");
+        nameAuthor.setBackground(new Background(new BackgroundFill(Color.CADETBLUE, new CornerRadii(2), new Insets(2))));
+        nameAuthor.setFont(Font.font("AnjaliOldLipi", 24));
+        System.out.println(javafx.scene.text.Font.getFamilies());
+        AnchorPane.setBottomAnchor(nameAuthor,80.0);
+        AnchorPane.setRightAnchor(nameAuthor,50.0);
+        root.getChildren().add(nameAuthor);
+
+        AnchorPane.setBottomAnchor(nexTL,80.0);
+        AnchorPane.setRightAnchor(nexTL,320.0);
+        root.getChildren().add(nexTL);
+
+        AnchorPane.setBottomAnchor(preVL,80.0);
+        AnchorPane.setRightAnchor(preVL,500.0);
+        root.getChildren().add(preVL);
+
+
+
         return this;
     }
+
 
     Scene retourneScene() {
-        Scene scene = new Scene(root,largeur,hauteur);
+        Scene scene;
+        scene= new Scene (root,largeur,hauteur);
         scene.setOnKeyPressed(event);
         return scene;
     }
+
+
 }
